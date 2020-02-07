@@ -2,10 +2,11 @@ package com.example.moviesapp.retrofit;
 
 import com.google.gson.annotations.SerializedName;
 
+import java.io.Serializable;
 import java.util.List;
 
 
-public class MoviesResponse {
+public class MoviesResponse implements Serializable {
     @SerializedName("page")
     private int page;
     @SerializedName("results")

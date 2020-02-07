@@ -1,16 +1,24 @@
 package com.example.moviesapp.fragment;
 
+import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
 
+import android.os.Handler;
+import android.os.Parcelable;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AbsListView;
+import android.widget.AdapterView;
 import android.widget.GridView;
+import android.widget.NumberPicker;
+import android.widget.ProgressBar;
 
 import com.example.moviesapp.R;
+import com.example.moviesapp.activity.Detail;
 import com.example.moviesapp.adapter.GridAdapter;
 import com.example.moviesapp.constant.Appconstant;
 import com.example.moviesapp.retrofit.BaseApplication;
@@ -18,6 +26,7 @@ import com.example.moviesapp.retrofit.FCMAPI;
 import com.example.moviesapp.retrofit.Movie;
 import com.example.moviesapp.retrofit.MoviesResponse;
 
+import java.io.Serializable;
 import java.util.List;
 
 import butterknife.BindView;
@@ -26,22 +35,29 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 import retrofit2.Retrofit;
+import retrofit2.http.Header;
 
 
 public class FirstFragment extends Fragment {
-@BindView(R.id.gird_view)
+    @BindView(R.id.gird_view)
     GridView gridView;   // https://abhiandroid.com/ui/gridview
+    Boolean isScrolling = false;
+    GridAdapter adapter;
+    @BindView(R.id.progressbr)
+    ProgressBar progress;
+    List<Movie> movies;
     private static final String TAG = "FirstFragment";
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View view=inflater.inflate(R.layout.fragment_first, container, false);
-        ButterKnife.bind( this, view );
+        View view = inflater.inflate(R.layout.fragment_first, container, false);
+        ButterKnife.bind(this, view);
         Retrofit();
         return view;
     }
 
     private void Retrofit() {
-       // https://www.androidhive.info/2016/05/android-working-with-retrofit-http-library/
+        // https://www.androidhive.info/2016/05/android-working-with-retrofit-http-library/
         //Instanceretrofit
         Retrofit retrofit = BaseApplication.getRetrofitInstance();
         //interface
@@ -52,9 +68,20 @@ public class FirstFragment extends Fragment {
                 if (response.code() == 200) {
                     Log.d(TAG, "onResponse: " + response.message());
 
-                    List<Movie> movies = response.body().getResults();
-                    GridAdapter adapter=new GridAdapter(getActivity(), movies);
-                     gridView.setAdapter(adapter);
+                    movies = response.body().getResults();
+                    adapter = new GridAdapter(getActivity(), movies);
+                    gridView.setAdapter(adapter);
+
+                    gridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                        @Override
+                        public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                            // set an Intent to Another Activity
+                            Movie clickedDataItem = movies.get(position);
+                            Intent intent = new Intent(getActivity(), Detail.class);
+                            intent.putExtra("movies", (Serializable) clickedDataItem);
+                            startActivity(intent);
+                        }
+                    });
                 }
             }
 
@@ -64,7 +91,38 @@ public class FirstFragment extends Fragment {
 
             }
         });
+        //https://stackoverflow.com/questions/13265457/lazy-download-images-into-gridview/13265776#13265776
+        gridView.setOnScrollListener(new AbsListView.OnScrollListener() {
 
+            @Override
+            public void onScrollStateChanged(AbsListView view, int scrollState) {
+                if (scrollState == AbsListView.OnScrollListener.SCROLL_STATE_TOUCH_SCROLL) {
+                    isScrolling = true;
+                }
+            }
+
+            @Override
+            public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
+
+
+                if (isScrolling && (visibleItemCount + firstVisibleItem == totalItemCount)) {
+                    isScrolling = false;
+
+                    fetchdata();
+                }
+
+            }
+
+        });
     }
 
+    private void fetchdata() {
+        progress.setVisibility(View.VISIBLE);
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                progress.setVisibility(View.GONE);
+            }
+        }, 1000);
+    }
 }
