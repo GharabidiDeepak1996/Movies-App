@@ -1,5 +1,6 @@
-package com.example.moviesapp.retrofit;
+package com.example.moviesapp.model;
 
+import com.example.moviesapp.model.Movie;
 import com.google.gson.annotations.SerializedName;
 
 import java.io.Serializable;

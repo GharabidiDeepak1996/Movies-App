@@ -1,7 +1,6 @@
 package com.example.moviesapp.activity;
 
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.Toolbar;
 
 import android.os.Bundle;
 import android.util.Log;
@@ -10,8 +9,7 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.example.moviesapp.R;
-import com.example.moviesapp.retrofit.Movie;
-import com.google.android.material.appbar.CollapsingToolbarLayout;
+import com.example.moviesapp.model.Movie;
 
 import java.util.List;
 
@@ -19,8 +17,8 @@ import butterknife.BindView;
 import butterknife.BindViews;
 import butterknife.ButterKnife;
 
-public class Detail extends AppCompatActivity {
-    private static final String TAG = "Detail";
+public class DetailActivity extends AppCompatActivity {
+    private static final String TAG = "DetailActivity";
     @BindViews({R.id.movietitle, R.id.TReleasedate, R.id.TRating, R.id.ToriginalLanguage, R.id.Toverview})
     List<TextView> listTextView;
     @BindView(R.id.movieimage)
@@ -35,7 +33,7 @@ public class Detail extends AppCompatActivity {
 
 
         movie = (Movie) getIntent().getSerializableExtra("movies");
-        Log.d(TAG, "onCreate: " + movie.getOriginalTitle());
+        Log.d(TAG, "onCreate: " + movie.getMovieid());
 
         String movieposter = movie.getPosterPath();
         String poster = "https://image.tmdb.org/t/p/w500" + movieposter;

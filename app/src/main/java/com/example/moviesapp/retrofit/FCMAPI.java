@@ -1,13 +1,9 @@
 package com.example.moviesapp.retrofit;
 
-import java.util.List;
+import com.example.moviesapp.model.MoviesResponse;
 
-import okhttp3.ResponseBody;
 import retrofit2.Call;
-import retrofit2.http.Body;
 import retrofit2.http.GET;
-import retrofit2.http.Headers;
-import retrofit2.http.POST;
 import retrofit2.http.Query;
 
 public interface FCMAPI {
