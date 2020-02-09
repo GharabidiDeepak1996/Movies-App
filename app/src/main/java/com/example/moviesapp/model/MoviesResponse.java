@@ -1,6 +1,5 @@
 package com.example.moviesapp.model;
 
-import com.example.moviesapp.model.Movie;
 import com.google.gson.annotations.SerializedName;
 
 import java.io.Serializable;
@@ -11,7 +10,7 @@ public class MoviesResponse implements Serializable {
     @SerializedName("page")
     private int page;
     @SerializedName("results")
-    private List<Movie> results;
+    private List<MovieEntity> results;
     @SerializedName("total_results")
     private int totalResults;
     @SerializedName("total_pages")
@@ -25,11 +24,11 @@ public class MoviesResponse implements Serializable {
         this.page = page;
     }
 
-    public List<Movie> getResults() {
+    public List<MovieEntity> getResults() {
         return results;
     }
 
-    public void setResults(List<Movie> results) {
+    public void setResults(List<MovieEntity> results) {
         this.results = results;
     }
 

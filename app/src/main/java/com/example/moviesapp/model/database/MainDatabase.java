@@ -1,4 +1,4 @@
-package com.example.moviesapp.database;
+package com.example.moviesapp.model.database;
 
 import android.content.Context;
 
@@ -7,10 +7,10 @@ import androidx.room.Room;
 import androidx.room.RoomDatabase;
 
 import com.example.moviesapp.model.FavoriteEntry;
-import com.example.moviesapp.model.Movie;
+import com.example.moviesapp.model.MovieEntity;
 
 
-@Database(entities= {Movie.class, FavoriteEntry.class},version =1,exportSchema = false)
+@Database(entities= {MovieEntity.class, FavoriteEntry.class},version =1,exportSchema = false)
 public abstract class MainDatabase extends RoomDatabase {
 
   public abstract DaoDatabase mDao();

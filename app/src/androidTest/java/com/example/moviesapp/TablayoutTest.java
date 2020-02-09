@@ -1,17 +1,11 @@
 package com.example.moviesapp;
 
-import android.preference.Preference;
-
-import androidx.annotation.UiThread;
 import androidx.test.espresso.Espresso;
 import androidx.test.rule.ActivityTestRule;
 import androidx.test.runner.AndroidJUnit4;
 
-import com.example.moviesapp.activity.HomeActivity;
-import com.example.moviesapp.fragment.FirstFragment;
-import com.example.moviesapp.model.FavoriteEntry;
+import com.example.moviesapp.view.activity.HomeActivity;
 
-import org.hamcrest.Matchers;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Rule;

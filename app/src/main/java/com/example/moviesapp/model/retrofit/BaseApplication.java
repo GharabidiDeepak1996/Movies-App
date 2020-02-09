@@ -1,4 +1,4 @@
-package com.example.moviesapp.retrofit;
+package com.example.moviesapp.model.retrofit;
 
 import android.app.Application;
 

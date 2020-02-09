@@ -6,8 +6,8 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentStatePagerAdapter;
 
-import com.example.moviesapp.fragment.FirstFragment;
-import com.example.moviesapp.fragment.SecondFragment;
+import com.example.moviesapp.view.fragment.FirstFragment;
+import com.example.moviesapp.view.fragment.SecondFragment;
 
 
 import java.util.List;

@@ -10,10 +10,9 @@ import com.google.gson.annotations.SerializedName;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
-//,indices ={@Index(value = {"posterPath"}, unique = true)}
-@Entity(tableName = "Movie", indices = {@Index(value = {"movie_id"},
-        unique = true)})
-public class Movie implements Serializable {
+//
+@Entity(tableName = "MovieEntity",indices ={@Index(value = {"movieid"}, unique = true)})
+public class MovieEntity implements Serializable {
     @PrimaryKey(autoGenerate = true)
     public int ID;
 
@@ -26,7 +25,7 @@ public class Movie implements Serializable {
     private String overview;
 
     @SerializedName("id")
-    @ColumnInfo(name="movie_id")
+    @ColumnInfo(name="movieid")
     private Integer movieid;
 
     @SerializedName("release_date")

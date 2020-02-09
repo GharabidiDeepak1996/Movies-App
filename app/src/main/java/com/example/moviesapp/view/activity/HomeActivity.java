@@ -1,4 +1,4 @@
-package com.example.moviesapp.activity;
+package com.example.moviesapp.view.activity;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
@@ -11,22 +11,18 @@ import android.view.MenuItem;
 
 import com.example.moviesapp.R;
 import com.example.moviesapp.adapter.TabLayoutAdapter;
-import com.example.moviesapp.database.DaoDatabase;
-import com.example.moviesapp.database.MainDatabase;
-import com.example.moviesapp.model.Movie;
 import com.google.android.material.tabs.TabLayout;
 import com.miguelcatalan.materialsearchview.MaterialSearchView;
 
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-import static com.example.moviesapp.fragment.FirstFragment.THIS_BROADCAST_FOR_CONTACT_SEARCHBAR;
+import static com.example.moviesapp.view.fragment.FirstFragment.THIS_BROADCAST_FOR_MOVIES_SEARCHBAR;
 
-public class HomeActivity extends AppCompatActivity {
+public class HomeActivity extends AppCompatActivity implements ViewPager.OnPageChangeListener{
     private static final String TAG = "HomeActivity";
     @BindView(R.id.toolbar)
     Toolbar toolbar;
@@ -37,6 +33,7 @@ public class HomeActivity extends AppCompatActivity {
     @BindView(R.id.search_bar)
     MaterialSearchView materialSearchView;
     TabLayoutAdapter tabLayoutAdapter;
+    MenuItem searchMenuItem;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -45,6 +42,7 @@ public class HomeActivity extends AppCompatActivity {
 
         toolbar.setTitle( "MoviesApp" );
         setSupportActionBar( toolbar );
+        viewPager.addOnPageChangeListener(this);
 
         List<String> list = new ArrayList<>();
         list.add( "Top Rated Movies" );
@@ -62,12 +60,12 @@ public class HomeActivity extends AppCompatActivity {
 
             @Override
             public boolean onQueryTextChange(String newText) {
-                MainDatabase database = MainDatabase.getDatabaseInstance(HomeActivity.this);
+               /* MainDatabase database = MainDatabase.getDatabaseInstance(HomeActivity.this);
                 DaoDatabase data = database.mDao();
-                List<Movie> data1= data.search(newText);
-
-                Intent intent=new Intent( THIS_BROADCAST_FOR_CONTACT_SEARCHBAR );
-                intent.putExtra( "contactdata", (Serializable) data1);
+                List<MovieEntity> searchdata= data.search(newText);
+*/
+                Intent intent=new Intent( THIS_BROADCAST_FOR_MOVIES_SEARCHBAR );
+                intent.putExtra( "searchdata",newText );
                 sendBroadcast( intent );
                 return false;
             }
@@ -79,11 +77,30 @@ public class HomeActivity extends AppCompatActivity {
     public boolean onCreateOptionsMenu(Menu menu) {
 
         getMenuInflater().inflate( R.menu.menu_item, menu );
-        MenuItem menuItem = menu.findItem( R.id.action_search );
-        materialSearchView.setMenuItem( menuItem );
+         searchMenuItem = menu.findItem( R.id.action_search );
+        materialSearchView.setMenuItem( searchMenuItem );
         return true;
     }
-    public TabLayoutAdapter getAdapter() {
-        return tabLayoutAdapter;
+
+    @Override
+    public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+
+    }
+
+    @Override
+    public void onPageSelected(int position) {
+        if (materialSearchView.isSearchOpen()) {
+            materialSearchView.closeSearch();
+        }
+        if (position == 1) {
+            searchMenuItem.setVisible(false);
+        } else {
+            searchMenuItem.setVisible(true);
+        }
+    }
+
+    @Override
+    public void onPageScrollStateChanged(int state) {
+
     }
 }

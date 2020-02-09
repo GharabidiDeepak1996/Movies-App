@@ -5,13 +5,14 @@ import androidx.annotation.NonNull;
 import androidx.room.ColumnInfo;
 import androidx.room.Entity;
 import androidx.room.Ignore;
+import androidx.room.Index;
 import androidx.room.PrimaryKey;
 
 /**
  * Created by delaroy on 9/6/18.
  */
 
-@Entity(tableName = "favoritetable")
+@Entity(tableName = "favoritetable",indices ={@Index(value = {"movieid"}, unique = true)})
 public class FavoriteEntry {
 
     @PrimaryKey(autoGenerate = true)

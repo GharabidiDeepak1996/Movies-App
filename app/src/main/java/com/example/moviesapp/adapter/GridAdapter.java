@@ -11,18 +11,19 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.example.moviesapp.R;
-import com.example.moviesapp.database.DaoDatabase;
-import com.example.moviesapp.database.MainDatabase;
+import com.example.moviesapp.model.MovieEntity;
+import com.example.moviesapp.model.database.DaoDatabase;
+import com.example.moviesapp.model.database.MainDatabase;
 import com.example.moviesapp.model.FavoriteEntry;
-import com.example.moviesapp.model.Movie;
 import com.github.ivbaranov.mfb.MaterialFavoriteButton;
+import com.google.android.material.snackbar.Snackbar;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class GridAdapter extends BaseAdapter {
     private static final String TAG = "GridAdapter";
-    List<Movie> lmovies;
+    List<MovieEntity> lmovies;
     Context mcontext;
     LayoutInflater inflter;
     List<FavoriteEntry> entries = new ArrayList<>();
@@ -31,9 +32,10 @@ public class GridAdapter extends BaseAdapter {
     String movietitile, movieposter, movieoverview;
     int movieid;
     double movierate;
+    FavAdapter adapter;
 
-    public GridAdapter(Context context, List<Movie> movies) {
-        lmovies = movies;
+    public GridAdapter(Context context, List<MovieEntity> movieEntities) {
+        lmovies = movieEntities;
         mcontext = context;
         inflter = (LayoutInflater.from(context));
     }
@@ -54,35 +56,40 @@ public class GridAdapter extends BaseAdapter {
         return 0;
     }
 
-    public void setCollection(List<Movie> chatCollection) {
-        lmovies = chatCollection;
-        notifyDataSetChanged();
+    public void setCollection(List<MovieEntity> chatCollection) {
+        if (chatCollection != null) {
+            lmovies.addAll(chatCollection);
+            notifyDataSetChanged();
+        }
+
 
         Log.d(TAG, "setCollection: " + lmovies.size());
     }
 
     public void saveFavorite() {
         final FavoriteEntry favoriteEntry = new FavoriteEntry(movieid, movietitile, movierate, movieposter, movieoverview);
-
                 data.insertFavorite(favoriteEntry);
 
     }
-
+    public void clearCollection() {
+        lmovies.clear();
+    }
     private void deleteFavorite(final int movie_id) {
                 data.deleteFavoriteWithId(movie_id);
     }
 
     @Override
     public View getView(int position, View view, ViewGroup parent) {
-        final Movie chat = lmovies.get(position);
-        Movie movie = new Movie();
-        movie.setPosterPath(chat.getPosterPath());
-        movie.setOverview(chat.getOverview());
-        movie.setReleaseDate(chat.getReleaseDate());
-        movie.setOriginalTitle(chat.getOriginalTitle());
-        movie.setOriginalLanguage(chat.getOriginalLanguage());
-        movie.setVoteAverage(chat.getVoteAverage());
-        movie.setMovieid(chat.getMovieid());
+        final MovieEntity chat = lmovies.get(position);
+
+        MovieEntity movieEntity = new MovieEntity();
+        movieEntity.setPosterPath(chat.getPosterPath());
+        movieEntity.setOverview(chat.getOverview());
+        movieEntity.setReleaseDate(chat.getReleaseDate());
+        movieEntity.setOriginalTitle(chat.getOriginalTitle());
+        movieEntity.setOriginalLanguage(chat.getOriginalLanguage());
+        movieEntity.setVoteAverage(chat.getVoteAverage());
+        movieEntity.setMovieid(chat.getMovieid());
         movieid = chat.getMovieid();
         movietitile = chat.getOriginalTitle();
         movierate = chat.getVoteAverage();
@@ -91,7 +98,7 @@ public class GridAdapter extends BaseAdapter {
 
         database = MainDatabase.getDatabaseInstance(mcontext);
         data = database.mDao();
-        data.insertAll(movie);
+        data.insertAll(movieEntity);
 
         view = inflter.inflate(R.layout.card_view, null); // inflate the layout
         ImageView image = view.findViewById(R.id.movieimage);
@@ -115,7 +122,7 @@ public class GridAdapter extends BaseAdapter {
 
 //https://android-arsenal.com/details/1/2612
 
-       /* if (entries.size() > 0) {
+        if (entries.size() > 0) {
             materialFavoriteButton.setFavorite(true);
             materialFavoriteButton.setOnFavoriteChangeListener(
                     new MaterialFavoriteButton.OnFavoriteChangeListener() {
@@ -127,8 +134,8 @@ public class GridAdapter extends BaseAdapter {
                                         Snackbar.LENGTH_SHORT).show();
                             } else {
                                 deleteFavorite(movieid);
-                           *//* Snackbar.make(buttonView, "Removed from Favorite",
-                                    Snackbar.LENGTH_SHORT).show();*//*
+                            Snackbar.make(buttonView, "Removed from Favorite",
+                                    Snackbar.LENGTH_SHORT).show();
                             }
                         }
                     });
@@ -139,17 +146,17 @@ public class GridAdapter extends BaseAdapter {
                         public void onFavoriteChanged(MaterialFavoriteButton buttonView, boolean favorite) {
                             if (favorite == true) {
                                 saveFavorite();
-                               *//* Snackbar.make(buttonView, "Added to Favorite",
-                                        Snackbar.LENGTH_SHORT).show();*//*
+                                Snackbar.make(buttonView, "Added to Favorite",
+                                        Snackbar.LENGTH_SHORT).show();
                             } else {
                                 // int movie_id = getIntent().getExtras().getInt("id");
                                 deleteFavorite(movieid);
-                              *//*  Snackbar.make(buttonView, "Removed from Favorite",
-                                        Snackbar.LENGTH_SHORT).show();*//*
+                                Snackbar.make(buttonView, "Removed from Favorite",
+                                        Snackbar.LENGTH_SHORT).show();
                             }
                         }
                     });
-        }*/
+        }
         return view;
     }
 }

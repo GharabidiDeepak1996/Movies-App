@@ -59,7 +59,7 @@
                 android:id="@+id/movietitle"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="The movies"
+                android:text="The movieEntities"
                 android:textSize="25dp"
                 android:textStyle="bold" />
 
@@ -84,7 +84,7 @@
                 android:id="@+id/TReleasedate"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="the movies date"
+                android:text="the movieEntities date"
                 android:textSize="20dp" />
 
             <TextView
