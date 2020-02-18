@@ -6,11 +6,13 @@ import androidx.room.Database;
 import androidx.room.Room;
 import androidx.room.RoomDatabase;
 
-import com.example.moviesapp.model.FavoriteEntry;
+import com.example.moviesapp.model.FavoriteEntity;
 import com.example.moviesapp.model.MovieEntity;
 
+import static com.example.moviesapp.constant.Appconstant.MOVIEAPP_DATABASE_FILE;
 
-@Database(entities= {MovieEntity.class, FavoriteEntry.class},version =1,exportSchema = false)
+
+@Database(entities= {MovieEntity.class, FavoriteEntity.class},version =1,exportSchema = false)
 public abstract class MainDatabase extends RoomDatabase {
 
   public abstract DaoDatabase mDao();
@@ -19,7 +21,7 @@ public abstract class MainDatabase extends RoomDatabase {
   public static MainDatabase getDatabaseInstance(Context context) {
     if (instance == null) {
 
-      instance = Room.databaseBuilder( context.getApplicationContext(), MainDatabase.class,"Movieapp_Database_File"  )
+      instance = Room.databaseBuilder( context.getApplicationContext(), MainDatabase.class,MOVIEAPP_DATABASE_FILE  )
               .allowMainThreadQueries()
               .build();
     }

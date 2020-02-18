@@ -32,7 +32,7 @@ public class DetailActivity extends AppCompatActivity {
         ButterKnife.bind(this);
 
 
-        movieEntity = (MovieEntity) getIntent().getSerializableExtra("movieEntities");
+        movieEntity = (MovieEntity) getIntent().getSerializableExtra("movies");
         Log.d(TAG, "onCreate: " + movieEntity.getMovieid());
 
         String movieposter = movieEntity.getPosterPath();

@@ -11,24 +11,33 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.example.moviesapp.R;
-import com.example.moviesapp.model.FavoriteEntry;
-import com.example.moviesapp.model.MovieEntity;
+import com.example.moviesapp.model.FavoriteEntity;
 
-import java.util.Collection;
 import java.util.List;
 
 public class FavAdapter extends BaseAdapter {
+    private static final String TAG = "FavAdapter";
     Context mcontext;
-    List<FavoriteEntry> fav;
+    List<FavoriteEntity> fav;
     LayoutInflater inflter;
-    public FavAdapter(Context context, List<FavoriteEntry> mfav) {
+    public FavAdapter(Context context, List<FavoriteEntity> mfav) {
         mcontext=context;
         fav=mfav;
         inflter = (LayoutInflater.from(context));
     }
 
+    public void setCollection(List<FavoriteEntity> FavoriteCollection) {
+fav=FavoriteCollection;
+            notifyDataSetChanged();
+
+    }
+    public void clearCollection() {
+        fav.clear();
+    }
+
     @Override
     public int getCount() {
+        Log.d(TAG, "getCount: "+fav.size());
         return fav.size();
     }
 
@@ -44,7 +53,7 @@ public class FavAdapter extends BaseAdapter {
 
     @Override
     public View getView(int position, View view, ViewGroup parent) {
-        final FavoriteEntry mfav = fav.get(position);
+        final FavoriteEntity mfav = fav.get(position);
         view = inflter.inflate(R.layout.fav_card_view, null);
         ImageView image = view.findViewById(R.id.fmovieimage);
         TextView title = view.findViewById(R.id.fmovietitle);

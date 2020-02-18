@@ -10,7 +10,7 @@ public interface MovieAPI {
 
     @GET("movie/popular")
     Call<MoviesResponse> getPopularMovies(@Query("api_key") String apiKey,
-                                            @Query("page") int page);
+                                          @Query("page") int page);
 
 
 }

@@ -28,6 +28,9 @@ android {
         sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_8
     }
+    dataBinding {
+        enabled = true
+    }
 }
 
 dependencies {
@@ -62,5 +65,7 @@ dependencies {
     androidTestImplementation "android.arch.persistence.room:testing:1.1.1"
 
     implementation 'com.github.ivbaranov:materialfavoritebutton:0.1.5'
+    // ViewModel and LiveData
+    implementation "androidx.lifecycle:lifecycle-extensions:2.0.0"
 
 }

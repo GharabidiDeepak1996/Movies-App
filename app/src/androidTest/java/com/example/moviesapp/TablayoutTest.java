@@ -4,7 +4,8 @@ import androidx.test.espresso.Espresso;
 import androidx.test.rule.ActivityTestRule;
 import androidx.test.runner.AndroidJUnit4;
 
-import com.example.moviesapp.view.activity.HomeActivity;
+import com.example.moviesapp.activity.HomeActivity;
+import com.example.moviesapp.fragment.FirstFragment;
 
 import org.junit.After;
 import org.junit.Before;
