@@ -23,6 +23,7 @@ import com.example.moviesapp.model.database.DaoDatabase;
 import com.example.moviesapp.model.database.MainDatabase;
 import com.github.ivbaranov.mfb.MaterialFavoriteButton;
 import com.google.android.material.snackbar.Snackbar;
+import com.sackcentury.shinebuttonlib.ShineButton;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -38,6 +39,7 @@ public class GridAdapter extends BaseAdapter {
     LayoutInflater inflter;
     DaoDatabase mdao;
     MaterialFavoriteButton materialFavoriteButton;
+    ShineButton shineButton;
 
     public GridAdapter(Context context, List<MovieEntity> movieEntities) {
         movieEntityList = movieEntities;
@@ -103,39 +105,36 @@ public class GridAdapter extends BaseAdapter {
                 .placeholder(R.drawable.load)
                 .into(image);
 
+        //https://github.com/ChadCSong/ShineButton
+        shineButton = (ShineButton) view.findViewById(R.id.fav);
+        shineButton.setOnCheckStateChangeListener(new ShineButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(View view, boolean favorite) {
+                if (favorite == true) {
+                    FavoriteEntity fav = new FavoriteEntity(movieEntity.getMovieid(), movieEntity.getOriginalTitle(), movieEntity.getVoteAverage(), movieEntity.getPosterPath(), movieEntity.getOverview(), favorite);
 
-//https://android-arsenal.com/details/1/2612
-        materialFavoriteButton = view.findViewById(R.id.fav);
-        materialFavoriteButton.setOnFavoriteChangeListener(
-                new MaterialFavoriteButton.OnFavoriteChangeListener() {
-                    @Override
-                    public void onFavoriteChanged(MaterialFavoriteButton buttonView, boolean favorite) {
+                    mdao.insertFavorite(fav);
+                    //to second fragment
+                    List<FavoriteEntity> mfav = mdao.loadAll();
+                    Intent intent = new Intent(THIS_BROADCAST_FOR_ADD_FAVORITE_ITEMS);
+                    intent.putExtra("favoriteitems", (Serializable) mfav);
+                    mcontext.sendBroadcast(intent);
 
-                        if (favorite == true) {
-                            FavoriteEntity fav = new FavoriteEntity(movieEntity.getMovieid(), movieEntity.getOriginalTitle(), movieEntity.getVoteAverage(), movieEntity.getPosterPath(), movieEntity.getOverview(), favorite);
+                    Toast.makeText(mcontext, "FavoriteItem Added", Toast.LENGTH_LONG).show();
+                } else {
 
-                            mdao.insertFavorite(fav);
-                            //to second fragment
-                            List<FavoriteEntity> mfav = mdao.loadAll();
-                            Intent intent = new Intent(THIS_BROADCAST_FOR_ADD_FAVORITE_ITEMS);
-                            intent.putExtra("favoriteitems", (Serializable) mfav);
-                            mcontext.sendBroadcast(intent);
+                    Log.d(TAG, "onFavoriteChanged: " + movieEntity.getMovieid());
 
-                            Toast.makeText(mcontext, "FavoriteItem Added", Toast.LENGTH_LONG).show();
-                        } else {
-
-                            Log.d(TAG, "onFavoriteChanged: " + movieEntity.getMovieid());
-
-                            mdao.deleteFavoriteWithId(movieEntity.getMovieid());
-                            List<FavoriteEntity> mfav = mdao.loadAll();
-                            Intent intent = new Intent(THIS_BROADCAST_FOR_ADD_FAVORITE_ITEMS);
-                            intent.putExtra("favoriteitems", (Serializable) mfav);
-                            mcontext.sendBroadcast(intent);
-                            materialFavoriteButton.setFavorite(false);
-                            Toast.makeText(mcontext, "FavoriteItem Deleted", Toast.LENGTH_LONG).show();
-                        }
-                    }
-                });
+                    mdao.deleteFavoriteWithId(movieEntity.getMovieid());
+                    List<FavoriteEntity> mfav = mdao.loadAll();
+                    Intent intent = new Intent(THIS_BROADCAST_FOR_ADD_FAVORITE_ITEMS);
+                    intent.putExtra("favoriteitems", (Serializable) mfav);
+                    mcontext.sendBroadcast(intent);
+                    shineButton.setChecked(false);
+                    Toast.makeText(mcontext, "FavoriteItem Deleted", Toast.LENGTH_LONG).show();
+                }
+            }
+        });
 
         Checkstatus(movieEntity.getMovieid());
 
@@ -154,7 +153,7 @@ public class GridAdapter extends BaseAdapter {
             Log.d(TAG, "getView: " + check.size());
 
             if (movieId == movieid) {
-                materialFavoriteButton.setFavorite(true);
+                shineButton.setChecked(true);
             }
         }
 
