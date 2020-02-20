@@ -1,6 +1,7 @@
-package com.example.moviesapp.model.database;
+package com.example.moviesapp.database;
 
 
+import androidx.lifecycle.LiveData;
 import androidx.room.Dao;
 import androidx.room.Insert;
 import androidx.room.OnConflictStrategy;
@@ -14,7 +15,7 @@ import java.util.List;
 
 
 @Dao
-public interface DaoDatabase {
+public interface MovieDao {
 //https://developer.android.com/training/data-storage/room
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
@@ -28,18 +29,15 @@ public interface DaoDatabase {
 
 //fetch data of fav
     @Query("SELECT * FROM favoritetable")
-    List<FavoriteEntity> loadAll();
+    LiveData<List<FavoriteEntity>> loadAll();
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     void insertFavorite(FavoriteEntity favoriteEntity);
-
-    @Query("SELECT * FROM favoritetable WHERE value")
-    List<FavoriteEntity> values();
 
     @Query("DELETE FROM favoritetable WHERE movieid = :movie_id")
     void deleteFavoriteWithId(int movie_id);
 
     @Query("SELECT * FROM favoritetable WHERE movieid = :movie_id")
-    List<FavoriteEntity> readAllData(int movie_id);
+    List<FavoriteEntity> readSelectedFavoriteItem(int movie_id);
 
 }

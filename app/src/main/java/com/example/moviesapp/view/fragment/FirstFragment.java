@@ -22,10 +22,10 @@ import androidx.lifecycle.ViewModelProviders;
 import com.example.moviesapp.R;
 import com.example.moviesapp.adapter.GridAdapter;
 import com.example.moviesapp.constant.Appconstant;
+import com.example.moviesapp.database.MovieDao;
+import com.example.moviesapp.database.MovieDatabase;
 import com.example.moviesapp.model.MovieEntity;
 import com.example.moviesapp.model.MoviesResponse;
-import com.example.moviesapp.model.database.DaoDatabase;
-import com.example.moviesapp.model.database.MainDatabase;
 import com.example.moviesapp.view.activity.DetailActivity;
 import com.example.moviesapp.viewmodel.FirstFragmentViewModel;
 
@@ -174,8 +174,8 @@ public class FirstFragment extends Fragment {
             Log.d(TAG, "onReceive: " + query);
 
             if (query != null && !query.isEmpty()) {
-                MainDatabase database = MainDatabase.getDatabaseInstance(getActivity());
-                DaoDatabase data = database.mDao();
+                MovieDatabase database = MovieDatabase.getDatabaseInstance(getActivity());
+                MovieDao data = database.mDao();
                 List<MovieEntity> movieEntityList = data.search("%" + query + "%");
                 if (movieEntityList != null && movieEntityList.size() > 0) {
                     Log.d(TAG, "ldata: " + movieEntityList.size());

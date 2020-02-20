@@ -1,4 +1,4 @@
-package com.example.moviesapp.model.retrofit;
+package com.example.moviesapp.retrofit;
 
 import com.example.moviesapp.model.MoviesResponse;
 

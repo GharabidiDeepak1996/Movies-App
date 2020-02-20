@@ -13,12 +13,15 @@ import android.widget.GridView;
 
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.Observer;
+import androidx.lifecycle.ViewModelProviders;
 
 import com.example.moviesapp.R;
 import com.example.moviesapp.adapter.FavAdapter;
+import com.example.moviesapp.database.MovieDao;
+import com.example.moviesapp.database.MovieDatabase;
 import com.example.moviesapp.model.FavoriteEntity;
-import com.example.moviesapp.model.database.DaoDatabase;
-import com.example.moviesapp.model.database.MainDatabase;
+import com.example.moviesapp.viewmodel.MovieViewModel;
 
 import java.util.List;
 
@@ -33,6 +36,7 @@ public class SecondFragment extends Fragment {
     FavAdapter fav;
     private List<FavoriteEntity> mfav;
     public static final String THIS_BROADCAST_FOR_ADD_FAVORITE_ITEMS = "favorite items";
+    private MovieViewModel movieViewModel;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -46,13 +50,15 @@ public class SecondFragment extends Fragment {
                              Bundle savedInstanceState) {
         View view=inflater.inflate(R.layout.fragment_second, container, false);
         ButterKnife.bind(this, view);
-        MainDatabase database = MainDatabase.getDatabaseInstance(getActivity());
-        DaoDatabase data = database.mDao();
-         mfav=data.loadAll();
-        Log.d(TAG, "onCreateView: "+mfav.size());
-
-         fav=new FavAdapter(getActivity(),mfav);
+        movieViewModel = ViewModelProviders.of(getActivity()).get(MovieViewModel.class);
+movieViewModel.getAllData().observe(this, new Observer<List<FavoriteEntity>>() {
+    @Override
+    public void onChanged(List<FavoriteEntity> favoriteEntities) {
+        fav=new FavAdapter(getActivity(),favoriteEntities);
         gridView.setAdapter(fav);
+    }
+});
+
         return view;
     }
 

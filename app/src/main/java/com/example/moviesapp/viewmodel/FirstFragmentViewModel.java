@@ -10,12 +10,12 @@ import androidx.lifecycle.MutableLiveData;
 
 
 import com.example.moviesapp.constant.Appconstant;
+import com.example.moviesapp.database.MovieDatabase;
 import com.example.moviesapp.model.MovieEntity;
 import com.example.moviesapp.model.MoviesResponse;
-import com.example.moviesapp.model.database.DaoDatabase;
-import com.example.moviesapp.model.database.MainDatabase;
-import com.example.moviesapp.model.retrofit.BaseApplication;
-import com.example.moviesapp.model.retrofit.MovieAPI;
+import com.example.moviesapp.database.MovieDao;
+import com.example.moviesapp.retrofit.BaseApplication;
+import com.example.moviesapp.retrofit.MovieAPI;
 
 import java.util.List;
 
@@ -27,6 +27,7 @@ import retrofit2.Retrofit;
 public class FirstFragmentViewModel extends AndroidViewModel {
 
     private static final String TAG = "FirstFragmentViewModel";
+
 
     MutableLiveData<MoviesResponse> moviesResponseMutableLiveData = new MutableLiveData<>();
 
@@ -83,15 +84,15 @@ public class FirstFragmentViewModel extends AndroidViewModel {
 
     void addMoviesInDB(MoviesResponse moviesResponse) {
         if (moviesResponse != null && moviesResponse.getResults() != null) {
-            MainDatabase database = MainDatabase.getDatabaseInstance(context);
-            DaoDatabase dao = database.mDao();
+            MovieDatabase database = MovieDatabase.getDatabaseInstance(context);
+            MovieDao dao = database.mDao();
             dao.insertAll(moviesResponse.getResults());
         }
     }
 
     public void loadMoviesFromDB() {
-        MainDatabase database = MainDatabase.getDatabaseInstance(context);
-        DaoDatabase dao = database.mDao();
+        MovieDatabase database = MovieDatabase.getDatabaseInstance(context);
+        MovieDao dao = database.mDao();
         List<MovieEntity> movieEntityList = dao.getAllMovies();
         dbMoviesLiveData.setValue(movieEntityList);
     }
