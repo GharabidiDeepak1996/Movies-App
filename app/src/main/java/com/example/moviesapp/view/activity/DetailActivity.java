@@ -31,7 +31,7 @@ public class DetailActivity extends AppCompatActivity {
         setContentView(R.layout.activity_detail);
         ButterKnife.bind(this);
 
-
+//received from firstfragment
         movieEntity = (MovieEntity) getIntent().getSerializableExtra("movies");
         Log.d(TAG, "onCreate: " + movieEntity.getMovieid());
 

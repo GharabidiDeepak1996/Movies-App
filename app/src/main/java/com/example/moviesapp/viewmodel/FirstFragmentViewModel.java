@@ -27,7 +27,7 @@ import retrofit2.Retrofit;
 public class FirstFragmentViewModel extends AndroidViewModel {
 
     private static final String TAG = "FirstFragmentViewModel";
-
+//https://www.journaldev.com/21168/android-livedata
 
     MutableLiveData<MoviesResponse> moviesResponseMutableLiveData = new MutableLiveData<>();
 

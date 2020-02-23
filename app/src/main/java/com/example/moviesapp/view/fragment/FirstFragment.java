@@ -46,11 +46,10 @@ public class FirstFragment extends Fragment {
     private static final String TAG = "FirstFragment";
     public static final String BROADCAST_FOR_MOVIES_SEARCHBAR = "broadcast_for_movie_searchbar";
     public static final String BROADCAST_FOR_SEARCH_CLOSE = "broadcast_for_search_close";
-
+    private Boolean isSearching = true;
     private int page = 1;
-    private int totalItems;
     private boolean isLoading = false;
-    private int limit = 20;
+
 
     private FirstFragmentViewModel firstFragmentViewModel;
 
@@ -101,25 +100,19 @@ public class FirstFragment extends Fragment {
 
             @Override
             public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemsCount) {
-
                 if (totalItemsCount > 0) {
                     int lastVisibleItem = firstVisibleItem + visibleItemCount;
-                    if (!isLoading && hasMoreItems() && (lastVisibleItem == totalItemsCount)) {
+                    if (!isLoading && isSearching && (lastVisibleItem == totalItemsCount)) {
                         isLoading = true;
                         loadMoreData();
 
                     }
                 }
-
             }
 
         });
     }
 
-    private boolean hasMoreItems() {
-        int itemCountInAdapter = adapter != null ? adapter.getCount() : 0;
-        return itemCountInAdapter < totalItems && itemCountInAdapter >= limit;
-    }
 
     private void setupViewModel() {
         firstFragmentViewModel = ViewModelProviders.of(this).get(FirstFragmentViewModel.class);
@@ -127,8 +120,8 @@ public class FirstFragment extends Fragment {
             @Override
             public void onChanged(MoviesResponse moviesResponse) {
                 if (moviesResponse != null) {
-                    totalItems = moviesResponse.getTotalResults();
-                    page = moviesResponse.getPage() + 1;
+
+                    page = moviesResponse.getPage() + 1; //incrementing page number
                     if (adapter != null) {
                         //1
                         adapter.setCollection(moviesResponse.getResults());
@@ -159,7 +152,7 @@ public class FirstFragment extends Fragment {
 
     private void loadData() {
         firstFragmentViewModel.loadData(page);
-   }
+    }
 
     private void loadMoreData() {
 
@@ -172,18 +165,16 @@ public class FirstFragment extends Fragment {
         public void onReceive(Context context, Intent intent) {
             String query = intent.getStringExtra(Appconstant.SEARCH_QUERY);
             Log.d(TAG, "onReceive: " + query);
+            isSearching = false;
 
             if (query != null && !query.isEmpty()) {
                 MovieDatabase database = MovieDatabase.getDatabaseInstance(getActivity());
                 MovieDao data = database.mDao();
                 List<MovieEntity> movieEntityList = data.search("%" + query + "%");
                 if (movieEntityList != null && movieEntityList.size() > 0) {
-                    Log.d(TAG, "ldata: " + movieEntityList.size());
+                    Log.d(TAG, "onReceive: " + movieEntityList);
                     adapter.clearCollection();
-                    //3
                     adapter.setCollection(movieEntityList);
-                } else {
-                    firstFragmentViewModel.loadMoviesFromDB();
                 }
             }
         }
@@ -192,14 +183,15 @@ public class FirstFragment extends Fragment {
     private BroadcastReceiver searchCloseBoreadcastreceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
-            Log.d(TAG, "onReceive 2: ");
+            Log.d(TAG, "onReceive 2: "+"jhdbj");
+             isSearching=true;
             firstFragmentViewModel.loadMoviesFromDB();
         }
     };
 
     @Override
     public void onDestroy() {
-        super .onDestroy();
+        super.onDestroy();
         if (getActivity() != null) {
             getActivity().unregisterReceiver(broadcastforsearchbar);
             getActivity().unregisterReceiver(searchCloseBoreadcastreceiver);

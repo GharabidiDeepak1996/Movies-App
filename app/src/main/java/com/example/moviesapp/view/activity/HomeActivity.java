@@ -68,6 +68,7 @@ public class HomeActivity extends AppCompatActivity implements ViewPager.OnPageC
                //send to first fragment
                 Intent intent = new Intent(BROADCAST_FOR_MOVIES_SEARCHBAR);
                 intent.putExtra(Appconstant.SEARCH_QUERY, newText);
+
                 sendBroadcast(intent);
                 return false;
             }
@@ -105,9 +106,9 @@ public class HomeActivity extends AppCompatActivity implements ViewPager.OnPageC
 
     @Override
     public void onPageSelected(int position) {
-        if (materialSearchView.isSearchOpen()) {
+       /* if (materialSearchView.isSearchOpen()) {
             materialSearchView.closeSearch();
-        }
+        }*/
         if (position == 1) {
             searchMenuItem.setVisible(false);
         } else {
